@@ -9,18 +9,19 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -52,7 +53,14 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun HomeScreen(innerPadding: PaddingValues) {
-    val image = painterResource(R.drawable.movie)
+    val images = listOf(
+        R.drawable.movie,
+        R.drawable.cinema,
+        R.drawable.popcorn
+    )
+
+    var currentImageIndex by remember { mutableIntStateOf(0) }
+
     val movies = listOf(
         Movie("The Dark Knight", 9.1F),
         Movie("Inception", 8.8F),
@@ -72,7 +80,7 @@ fun HomeScreen(innerPadding: PaddingValues) {
 
     Box {
         Image(
-            painter = image,
+            painter = painterResource(images[currentImageIndex]),
             contentDescription = "Hintergrundbild",
             contentScale = ContentScale.Crop,
             modifier = Modifier.fillMaxSize()
@@ -85,12 +93,12 @@ fun HomeScreen(innerPadding: PaddingValues) {
                 .fillMaxSize()
         ) {
             Headline()
-            Welcome(
-                name = "Manuel",
-            )
+            Welcome(name = "Manuel")
 
             Button(
-                onClick = {},
+                onClick = {
+                    currentImageIndex = (currentImageIndex + 1) % images.size
+                },
                 modifier = Modifier.padding(top = 32.dp)
             ) {
                 Text(stringResource(R.string.change_image_button))
@@ -104,7 +112,6 @@ fun HomeScreen(innerPadding: PaddingValues) {
                 }
             }
         }
-
     }
 }
 
