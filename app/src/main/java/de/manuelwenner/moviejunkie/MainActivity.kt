@@ -5,7 +5,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -13,17 +13,25 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import de.manuelwenner.moviejunkie.model.Movie
+import de.manuelwenner.moviejunkie.ui.components.MovieItem
 import de.manuelwenner.moviejunkie.ui.theme.MovieJunkieTheme
 
 class MainActivity : ComponentActivity() {
@@ -42,26 +50,39 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-
 @Composable
 fun HomeScreen(innerPadding: PaddingValues) {
     val image = painterResource(R.drawable.movie)
+    val movies = listOf(
+        Movie("The Dark Knight", 9.1F),
+        Movie("Inception", 8.8F),
+        Movie("The Godfather", 9.5F),
+        Movie("Interstellar", 8.2F),
+        Movie("Pulp Fiction", 7.9F),
+        Movie("The Shawshank Redemption", 6.2F),
+        Movie("Forrest Gump", 9F),
+        Movie("The Matrix", 8.8F),
+        Movie("Fight Club", 9.1F),
+        Movie("Gladiator", 7.8F),
+        Movie("Gladiator 2", 5.5F),
+        Movie("The Lord of the Rings: The Return of the King", 9F),
+        Movie("Schindler's List", 9F),
+        Movie("The Green Mile", 8.6F)
+    )
 
     Box {
         Image(
             painter = image,
-            contentDescription = null,
+            contentDescription = "Hintergrundbild",
             contentScale = ContentScale.Crop,
             modifier = Modifier.fillMaxSize()
         )
 
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center,
             modifier = Modifier
                 .padding(innerPadding)
-                .fillMaxWidth()
-                .fillMaxHeight(),
+                .fillMaxSize()
         ) {
             Headline()
             Welcome(
@@ -72,7 +93,15 @@ fun HomeScreen(innerPadding: PaddingValues) {
                 onClick = {},
                 modifier = Modifier.padding(top = 32.dp)
             ) {
-                Text("Bild wechseln")
+                Text(stringResource(R.string.change_image_button))
+            }
+
+            LazyColumn(
+                modifier = Modifier.fillMaxSize()
+            ) {
+                items(movies) { movie ->
+                    MovieItem(movie)
+                }
             }
         }
 
@@ -81,15 +110,28 @@ fun HomeScreen(innerPadding: PaddingValues) {
 
 @Composable
 fun Headline() {
-    Text(
-        text = "Movie Junkie App",
-        fontSize = 32.sp,
-    )
+    Box(
+        modifier = Modifier
+            .background(
+                color = Color.Black.copy(alpha = 0.6f),
+                shape = RoundedCornerShape(8.dp)
+            )
+            .padding(horizontal = 16.dp, vertical = 8.dp)
+    ) {
+        Text(
+            text = stringResource(R.string.headline),
+            fontSize = 32.sp,
+            color = Color.White
+        )
+    }
 }
 
 @Composable
 fun Welcome(name: String) {
-    Text(text = "Welcome $name to the greatest movie app ever.")
+    Text(
+        text = stringResource(R.string.welcome_message, name),
+        color = Color.White
+    )
 }
 
 @Preview(showBackground = true)
