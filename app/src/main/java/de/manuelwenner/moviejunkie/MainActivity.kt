@@ -44,7 +44,15 @@ class MainActivity : ComponentActivity() {
                 Scaffold(
                     modifier = Modifier.fillMaxSize(),
                 ) { innerPadding ->
-                    HomeScreen(innerPadding)
+                    var currentImageIndex by remember { mutableIntStateOf(0) }
+
+                    HomeScreen(
+                        innerPadding,
+                        currentImageIndex = currentImageIndex,
+                        onImageChange = {
+                            currentImageIndex = (currentImageIndex + 1) % 3
+                        }
+                    )
                 }
             }
         }
@@ -52,14 +60,16 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun HomeScreen(innerPadding: PaddingValues) {
+fun HomeScreen(
+    innerPadding: PaddingValues,
+    currentImageIndex: Int,
+    onImageChange: () -> Unit
+) {
     val images = listOf(
         R.drawable.movie,
         R.drawable.cinema,
         R.drawable.popcorn
     )
-
-    var currentImageIndex by remember { mutableIntStateOf(0) }
 
     val movies = listOf(
         Movie("The Dark Knight", 9.1F),
@@ -96,9 +106,7 @@ fun HomeScreen(innerPadding: PaddingValues) {
             Welcome(name = "Manuel")
 
             Button(
-                onClick = {
-                    currentImageIndex = (currentImageIndex + 1) % images.size
-                },
+                onClick = onImageChange,
                 modifier = Modifier.padding(top = 32.dp)
             ) {
                 Text(stringResource(R.string.change_image_button))
@@ -146,7 +154,10 @@ fun Welcome(name: String) {
 fun GreetingPreview() {
     MovieJunkieTheme {
         Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-            HomeScreen(innerPadding)
+            HomeScreen(
+                innerPadding,
+                0
+            ) {}
         }
     }
 }
