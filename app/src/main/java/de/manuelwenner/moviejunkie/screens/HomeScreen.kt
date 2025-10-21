@@ -74,6 +74,8 @@ fun HomeScreen(
                     onClick = { currentImage = images.random() }
                 )
 
+                Text(text = "" + movieUiState.errorMessage)
+
                 MovieList(modifier = Modifier.weight(1f), onListItemClicked, movieUiState.movies)
             }
         }

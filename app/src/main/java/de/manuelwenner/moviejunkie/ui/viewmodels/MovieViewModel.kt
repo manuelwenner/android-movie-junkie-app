@@ -3,6 +3,7 @@ package de.manuelwenner.moviejunkie.ui.viewmodels
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import de.manuelwenner.moviejunkie.R
+import de.manuelwenner.moviejunkie.data.repository.MovieRepository
 import de.manuelwenner.moviejunkie.model.Movie
 import de.manuelwenner.moviejunkie.ui.MoviesUiState
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -11,7 +12,9 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-class MovieViewModel : ViewModel() {
+class MovieViewModel(
+    private val repository: MovieRepository = MovieRepository()
+) : ViewModel() {
 
     // immutable and only mutable inside the ViewModel
     private val _uiState = MutableStateFlow(MoviesUiState())
@@ -41,9 +44,10 @@ class MovieViewModel : ViewModel() {
             _uiState.update { it.copy(isLoading = true, errorMessage = null) }
 
             try {
-                val newMovies = fetchMoviesFromRepository()
-                val updatedMovies = _uiState.value.movies + newMovies
-                _uiState.update { it.copy(movies = updatedMovies, isLoading = false) }
+//                val newMovies = fetchMoviesFromRepository()
+                val result = repository.fetchPopularMovies()
+                val updatedMovies = _uiState.value.movies
+                _uiState.update { it.copy(movies = updatedMovies, isLoading = false, errorMessage = result) }
             } catch (e: Exception) {
                 _uiState.update { it.copy(
                     errorMessage = e.message ?: "Unbekannter Fehler",
@@ -52,19 +56,4 @@ class MovieViewModel : ViewModel() {
             }
         }
     }
-
-    private fun fetchMoviesFromRepository(): List<Movie> {
-        // Simulierte Netzwerk- oder Datenbankabfrage
-        return listOf(
-            Movie("Forrest Gump", 9F),
-            Movie("The Matrix", 8.8F),
-            Movie("Guardians of the galaxy", 9.1F, R.drawable.guardians),
-            Movie("Gladiator", 7.8F),
-            Movie("Gladiator 2", 5.5F),
-            Movie("The Lord of the Rings: The Return of the King", 9F),
-            Movie("Schindler's List", 9F),
-            Movie("Transformers", 8.6F, R.drawable.transformers)
-        )
-    }
-
 }
