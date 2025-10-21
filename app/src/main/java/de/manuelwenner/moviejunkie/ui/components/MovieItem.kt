@@ -1,5 +1,8 @@
 package de.manuelwenner.moviejunkie.ui.components
 
+import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -12,6 +15,11 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -43,23 +51,70 @@ fun MovieItem(movie: Movie) {
             modifier = Modifier.weight(1f)
         )
 
-        Row(
-            modifier = Modifier.padding(start = 8.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            repeat(movie.rating.toInt()) {
-                Icon(
-                    imageVector = Icons.Default.Star,
-                    contentDescription = null,
-                    tint = Color.Yellow,
-                    modifier = Modifier.size(16.dp)
-                )
-            }
-            Text(
-                text = " (${movie.rating}/10)",
-                fontSize = 16.sp,
-                color = MaterialTheme.colorScheme.onSurface
+        AnimatedRatingStars(movie.rating)
+
+    }
+}
+
+@Composable
+fun AnimatedRatingStars(rating: Float) {
+    var startAnimation by remember { mutableStateOf(false) }
+
+    // Animiert die Bewertung von 0 auf den Zielwert
+    val animatedRating by animateFloatAsState(
+        targetValue = if (startAnimation) rating else 0f,
+        animationSpec = tween(
+            durationMillis = 2500,
+            easing = FastOutSlowInEasing
+        ),
+        label = "starRatingAnimation"
+    )
+
+    LaunchedEffect(Unit) {
+        startAnimation = true
+    }
+
+    // Wir haben maximal 10 Sterne
+    val totalStars = 10
+    val filledStars = animatedRating.toInt()
+    val partialStar = animatedRating - filledStars
+
+    Row(verticalAlignment = Alignment.CenterVertically) {
+        // Ganze Sterne
+        repeat(filledStars) {
+            Icon(
+                imageVector = Icons.Default.Star,
+                contentDescription = null,
+                tint = Color.Yellow,
+                modifier = Modifier.size(20.dp)
             )
         }
+
+        // Teilweise gefüllter Stern (wenn nötig)
+        if (partialStar > 0f && filledStars < totalStars) {
+            Icon(
+                imageVector = Icons.Default.Star,
+                contentDescription = null,
+                tint = Color.Yellow.copy(alpha = partialStar),
+                modifier = Modifier.size(20.dp)
+            )
+        }
+
+        // Leere Sterne
+        repeat(totalStars - filledStars - if (partialStar > 0f) 1 else 0) {
+            Icon(
+                imageVector = Icons.Default.Star,
+                contentDescription = null,
+                tint = Color.Gray.copy(alpha = 0.3f),
+                modifier = Modifier.size(20.dp)
+            )
+        }
+
+        Text(
+            text = String.format(" %.1f / 10", animatedRating),
+            fontSize = 14.sp,
+            color = Color.White,
+            modifier = Modifier.padding(start = 4.dp)
+        )
     }
 }

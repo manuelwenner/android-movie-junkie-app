@@ -4,6 +4,12 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -59,6 +65,7 @@ class MainActivity : ComponentActivity() {
     }
 }
 
+@OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun HomeScreen(
     innerPadding: PaddingValues,
@@ -89,12 +96,21 @@ fun HomeScreen(
     )
 
     Box {
-        Image(
-            painter = painterResource(images[currentImageIndex]),
-            contentDescription = "Hintergrundbild",
-            contentScale = ContentScale.Crop,
-            modifier = Modifier.fillMaxSize()
-        )
+        // 👇 animiert den Bildwechsel
+        AnimatedContent(
+            targetState = currentImageIndex,
+            transitionSpec = {
+                fadeIn(animationSpec = tween(600)) togetherWith fadeOut(animationSpec = tween(600))
+            },
+            label = "backgroundTransition"
+        ) { index ->
+            Image(
+                painter = painterResource(images[index]),
+                contentDescription = "Hintergrundbild",
+                contentScale = ContentScale.Crop,
+                modifier = Modifier.fillMaxSize()
+            )
+        }
 
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -122,6 +138,7 @@ fun HomeScreen(
         }
     }
 }
+
 
 @Composable
 fun Headline() {
