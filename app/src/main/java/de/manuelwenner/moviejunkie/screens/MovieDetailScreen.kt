@@ -1,7 +1,5 @@
 package de.manuelwenner.moviejunkie.screens
 
-import de.manuelwenner.moviejunkie.ui.theme.MovieJunkieTheme
-
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -13,21 +11,27 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import de.manuelwenner.moviejunkie.R
-import de.manuelwenner.moviejunkie.data.getMovies
 import de.manuelwenner.moviejunkie.model.Movie
+import de.manuelwenner.moviejunkie.ui.theme.MovieJunkieTheme
+import de.manuelwenner.moviejunkie.ui.viewmodels.MovieViewModel
 
 @Composable
-fun MovieDetailScreen(innerPadding: PaddingValues, movieTitle: String) {
-    // Movie Data (For now we can mock this data, later we could fetch this from a database)
-    val movie = getMovieDetails(movieTitle)
+fun MovieDetailScreen(innerPadding: PaddingValues, movieTitle: String, viewModel: MovieViewModel) {
+    val movieUiState by viewModel.uiState.collectAsState()
+    val movie = movieUiState.movies.firstOrNull { it.title == movieTitle } ?: Movie(
+        title = "Unknown", rating = 0F, image = R.drawable.movie
+    )
 
     Column(
         modifier = Modifier
@@ -59,24 +63,20 @@ fun MovieDetailScreen(innerPadding: PaddingValues, movieTitle: String) {
                 color = Color.Gray,
             )
         }
-    }
-}
 
-fun getMovieDetails(movieTitle: String): Movie {
-    return getMovies().firstOrNull { it.title == movieTitle } ?: Movie(
-        title = "Unknown", rating = 1F, image = R.drawable.movie
-    )
+    }
 }
 
 @Composable
 @Preview
 fun MovieDetailPreview() {
     MovieJunkieTheme {
-        val movieTitle = getMovies()[7].title
+        val movieTitle = "Guardians of the galaxy"
+        val viewModel: MovieViewModel = viewModel()
 
         Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
             Column(modifier = Modifier.padding(innerPadding)) {
-                MovieDetailScreen(innerPadding, movieTitle)
+                MovieDetailScreen(innerPadding, movieTitle, viewModel)
             }
         }
     }

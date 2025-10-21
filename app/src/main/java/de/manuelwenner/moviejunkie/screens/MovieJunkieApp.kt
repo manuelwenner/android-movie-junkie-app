@@ -3,7 +3,6 @@ package de.manuelwenner.moviejunkie.screens
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -11,8 +10,10 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -21,13 +22,16 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import de.manuelwenner.moviejunkie.R
-import androidx.compose.runtime.getValue
+import de.manuelwenner.moviejunkie.ui.viewmodels.MovieViewModel
 
 /**
  * Composable that displays an app bar and a list of heroes.
  */
 @Composable
-fun MovieJunkieApp(navController: NavHostController = rememberNavController()) {
+fun MovieJunkieApp(
+    navController: NavHostController = rememberNavController(),
+    viewModel: MovieViewModel = viewModel()
+) {
     val backStackEntry by navController.currentBackStackEntryAsState()
 
     var currentRoute = ""
@@ -56,6 +60,7 @@ fun MovieJunkieApp(navController: NavHostController = rememberNavController()) {
                     onListItemClicked = { movie ->
                         navController.navigate("${MovieJunkieScreen.Detail.name}/${movie.title}")
                     },
+                    viewModel
                 )
             }
 
@@ -64,7 +69,11 @@ fun MovieJunkieApp(navController: NavHostController = rememberNavController()) {
                 arguments = listOf(navArgument("movieTitle") { type = NavType.StringType })
             ) { backStackEntry ->
                 val movieTitle = backStackEntry.arguments?.getString("movieTitle") ?: ""
-                MovieDetailScreen(innerPadding, movieTitle = movieTitle)
+                MovieDetailScreen(
+                    innerPadding,
+                    movieTitle = movieTitle,
+                    viewModel
+                )
             }
         }
     }

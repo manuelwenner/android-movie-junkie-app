@@ -15,6 +15,8 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -28,12 +30,24 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import de.manuelwenner.moviejunkie.R
-import de.manuelwenner.moviejunkie.data.getMovies
 import de.manuelwenner.moviejunkie.model.Movie
 import de.manuelwenner.moviejunkie.ui.components.MovieItem
+import de.manuelwenner.moviejunkie.ui.viewmodels.MovieViewModel
+import kotlinx.coroutines.delay
 
 @Composable
-fun HomeScreen(innerPadding: PaddingValues, onListItemClicked: (Movie) -> Unit) {
+fun HomeScreen(
+    innerPadding: PaddingValues,
+    onListItemClicked: (Movie) -> Unit,
+    viewModel: MovieViewModel
+) {
+    val movieUiState by viewModel.uiState.collectAsState()
+
+    LaunchedEffect(Unit) {
+        delay(3000)
+        viewModel.loadMovies()
+    }
+
     Column(modifier = Modifier.padding(innerPadding)) {
         val images = listOf(
             painterResource(R.drawable.movie),
@@ -60,7 +74,7 @@ fun HomeScreen(innerPadding: PaddingValues, onListItemClicked: (Movie) -> Unit) 
                     onClick = { currentImage = images.random() }
                 )
 
-                MovieList(modifier = Modifier.weight(1f), onListItemClicked)
+                MovieList(modifier = Modifier.weight(1f), onListItemClicked, movieUiState.movies)
             }
         }
     }
@@ -73,7 +87,9 @@ fun HomeSection(
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = modifier.padding(8.dp).fillMaxWidth()
+        modifier = modifier
+            .padding(8.dp)
+            .fillMaxWidth()
     ) {
         Headline()
         Welcome("Manuel")
@@ -87,9 +103,11 @@ fun HomeSection(
 }
 
 @Composable
-fun MovieList(modifier: Modifier = Modifier, onListItemClicked: (Movie) -> Unit) {
-
-    val movies = getMovies()
+fun MovieList(
+    modifier: Modifier = Modifier,
+    onListItemClicked: (Movie) -> Unit,
+    movies: List<Movie>
+) {
 
     Column(
         modifier = modifier
@@ -102,6 +120,7 @@ fun MovieList(modifier: Modifier = Modifier, onListItemClicked: (Movie) -> Unit)
             items(movies) { movie ->
                 MovieItem(movie) { onListItemClicked(movie) }
             }
+
         }
     }
 }
