@@ -1,6 +1,7 @@
 package de.manuelwenner.moviejunkie.ui.components
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -21,7 +22,7 @@ import androidx.compose.ui.unit.sp
 import de.manuelwenner.moviejunkie.model.Movie
 
 @Composable
-fun MovieItem(movie: Movie) {
+fun MovieItem(movie: Movie, onListItemClicked: () -> Unit) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -30,7 +31,10 @@ fun MovieItem(movie: Movie) {
                 color = MaterialTheme.colorScheme.surfaceVariant,
                 shape = RoundedCornerShape(12.dp)
             )
-            .padding(12.dp),
+            .padding(12.dp)
+            .clickable {
+                onListItemClicked()
+            },
         //horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {

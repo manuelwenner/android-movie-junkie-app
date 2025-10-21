@@ -3,4 +3,5 @@
     <string name="headline">Movie Junkie App</string>
     <string name="welcome_message">Welcome %s to the greatest movie app ever.</string>
     <string name="change_image_button">Bild wechseln</string>
+    <string name="back_button">Back</string>
 </resources>
