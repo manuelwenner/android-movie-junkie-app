@@ -9,14 +9,16 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.rememberNavController
+import dagger.hilt.android.AndroidEntryPoint
 import de.manuelwenner.moviejunkie.screens.HomeScreen
 import de.manuelwenner.moviejunkie.screens.MovieJunkieApp
 import de.manuelwenner.moviejunkie.screens.MovieJunkieScreen
 import de.manuelwenner.moviejunkie.ui.theme.MovieJunkieTheme
 import de.manuelwenner.moviejunkie.ui.viewmodels.MovieViewModel
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,7 +36,7 @@ class MainActivity : ComponentActivity() {
 fun GreetingPreview() {
     MovieJunkieTheme {
         val navController = rememberNavController()
-        val viewModel: MovieViewModel = viewModel()
+        val viewModel: MovieViewModel = hiltViewModel()
 
         Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
             HomeScreen(

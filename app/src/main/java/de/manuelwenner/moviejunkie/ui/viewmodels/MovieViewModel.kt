@@ -2,9 +2,10 @@ package de.manuelwenner.moviejunkie.ui.viewmodels
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import dagger.hilt.android.lifecycle.HiltViewModel
 import de.manuelwenner.moviejunkie.R
 import de.manuelwenner.moviejunkie.data.network.toUiModel
-import de.manuelwenner.moviejunkie.data.repository.MovieRepository
+import de.manuelwenner.moviejunkie.data.repository.IMovieRepository
 import de.manuelwenner.moviejunkie.model.Movie
 import de.manuelwenner.moviejunkie.ui.MoviesUiState
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -12,9 +13,11 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class MovieViewModel(
-    private val repository: MovieRepository
+@HiltViewModel
+class MovieViewModel @Inject constructor(
+    private val repository: IMovieRepository
 ) : ViewModel() {
 
     // immutable and only mutable inside the ViewModel

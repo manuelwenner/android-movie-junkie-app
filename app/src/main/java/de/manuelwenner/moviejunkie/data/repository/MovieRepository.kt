@@ -1,14 +1,17 @@
 package de.manuelwenner.moviejunkie.data.repository
 
+import de.manuelwenner.moviejunkie.data.network.MovieApiService
 import de.manuelwenner.moviejunkie.data.network.MovieDto
-import de.manuelwenner.moviejunkie.data.network.RetrofitInstance
+import javax.inject.Inject
 
 
-class MovieRepository {
-    suspend fun fetchPopularMovies(): List<MovieDto> {
+class MovieRepository @Inject constructor(
+    private val apiService: MovieApiService
+) : IMovieRepository {
+    override suspend fun fetchPopularMovies(): List<MovieDto> {
         return try {
             val response =
-                RetrofitInstance.api.getDiscoverMovie()
+                apiService.getDiscoverMovie()
             response.results
         } catch (e: Exception) {
             e.printStackTrace()
