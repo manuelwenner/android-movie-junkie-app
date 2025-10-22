@@ -47,7 +47,8 @@ fun MovieJunkieApp(
     var currentRoute = ""
     currentRoute = backStackEntry?.destination?.route?.substringBefore("/").toString()
     if (currentRoute == "Detail") {
-        currentRoute = backStackEntry?.arguments?.getString("movieTitle") ?: stringResource(R.string.details_screen)
+        currentRoute = backStackEntry?.arguments?.getString("movieTitle")
+            ?: stringResource(R.string.details_screen)
     }
 
     Scaffold(
@@ -78,7 +79,8 @@ fun MovieJunkieApp(
                 route = "${MovieJunkieScreen.Detail.name}/{movieTitle}",
                 arguments = listOf(navArgument("movieTitle") { type = NavType.StringType })
             ) { backStackEntry ->
-                val movieTitle = backStackEntry.arguments?.getString("movieTitle") ?: stringResource(R.string.unknown_movie)
+                val movieTitle = backStackEntry.arguments?.getString("movieTitle")
+                    ?: stringResource(R.string.unknown_movie)
                 MovieDetailScreen(
                     innerPadding,
                     movieTitle = movieTitle,

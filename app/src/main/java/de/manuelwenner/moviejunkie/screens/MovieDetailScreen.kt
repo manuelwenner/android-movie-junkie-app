@@ -31,11 +31,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
-import coil.request.ImageRequest
 import de.manuelwenner.moviejunkie.R
 import de.manuelwenner.moviejunkie.model.Movie
 import de.manuelwenner.moviejunkie.ui.constants.UiConstants
 import de.manuelwenner.moviejunkie.ui.theme.MovieJunkieTheme
+import de.manuelwenner.moviejunkie.ui.utils.ImageUtils
 import de.manuelwenner.moviejunkie.ui.viewmodels.MovieViewModel
 
 @Composable
@@ -55,28 +55,20 @@ fun MovieDetailScreen(innerPadding: PaddingValues, movieTitle: String, viewModel
                 .fillMaxWidth()
                 .height(UiConstants.Size.DETAIL_IMAGE_HEIGHT)
         ) {
-            // --- Hintergrundbild (unscharf & leicht abgedunkelt) ---
+            // blurry background image
             AsyncImage(
-                model = ImageRequest.Builder(LocalContext.current)
-                    .data("https://image.tmdb.org/t/p/w500${movie.imageUrl}")
-                    .crossfade(true)
-                    .build(),
+                model = ImageUtils.createTmdbImageRequest(LocalContext.current, movie.imageUrl),
                 contentDescription = null,
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
                     .matchParentSize()
                     .blur(UiConstants.Blur.LG)
-                    .alpha(UiConstants.Alpha.BACKGROUND),
-                placeholder = painterResource(R.drawable.movie),
-                error = painterResource(R.drawable.movie)
+                    .alpha(UiConstants.Alpha.BACKGROUND)
             )
 
-            // Vordergrundbild (Poster vollständig sichtbar)
+            // foreground picture
             AsyncImage(
-                model = ImageRequest.Builder(LocalContext.current)
-                    .data("https://image.tmdb.org/t/p/w500${movie.imageUrl}")
-                    .crossfade(true)
-                    .build(),
+                model = ImageUtils.createTmdbImageRequest(LocalContext.current, movie.imageUrl),
                 contentDescription = movie.title,
                 contentScale = ContentScale.Fit,
                 modifier = Modifier
@@ -84,12 +76,9 @@ fun MovieDetailScreen(innerPadding: PaddingValues, movieTitle: String, viewModel
                     .fillMaxHeight()
                     .padding(horizontal = UiConstants.Spacing.XXXL)
                     .clip(RoundedCornerShape(UiConstants.CornerRadius.SM))
-                    .shadow(UiConstants.Shadow.MD, RoundedCornerShape(UiConstants.CornerRadius.SM)),
-                placeholder = painterResource(R.drawable.movie),
-                error = painterResource(R.drawable.movie)
+                    .shadow(UiConstants.Shadow.MD, RoundedCornerShape(UiConstants.CornerRadius.SM))
             )
         }
-
 
         Spacer(modifier = Modifier.height(UiConstants.Spacing.LG))
 
