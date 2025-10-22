@@ -4,4 +4,23 @@
     <string name="welcome_message">Welcome %s to the greatest movie app ever.</string>
     <string name="change_image_button">Bild wechseln</string>
     <string name="back_button">Back</string>
+    
+    <!-- Movie Detail Screen -->
+    <string name="rating_format">Rating: %1$.1f/10</string>
+    <string name="unknown_movie">Unknown</string>
+    <string name="details_screen">Details</string>
+    
+    <!-- Error Messages -->
+    <string name="error_unknown">Unbekannter Fehler</string>
+    <string name="error_api_key_invalid">API Key ungültig oder abgelaufen</string>
+    <string name="error_access_denied">Zugriff verweigert</string>
+    <string name="error_endpoint_not_found">API Endpoint nicht gefunden</string>
+    <string name="error_too_many_requests">Zu viele Anfragen - bitte später versuchen</string>
+    <string name="error_server">Server Fehler</string>
+    <string name="error_http_format">HTTP Fehler: %d</string>
+    <string name="error_network">Netzwerk Fehler - bitte Internetverbindung prüfen</string>
+    <string name="error_unknown_format">Unbekannter Fehler: %s</string>
+    
+    <!-- Preview -->
+    <string name="preview_movie_title">Guardians of the galaxy</string>
 </resources>

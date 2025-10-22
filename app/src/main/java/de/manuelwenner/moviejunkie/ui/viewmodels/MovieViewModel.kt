@@ -13,6 +13,8 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import retrofit2.HttpException
+import java.io.IOException
 import javax.inject.Inject
 
 @HiltViewModel
@@ -27,16 +29,7 @@ class MovieViewModel @Inject constructor(
     val uiState: StateFlow<MoviesUiState> = _uiState.asStateFlow()
 
     init {
-        // Synchron, kein Launch nötig da getMovies() nicht suspendierend ist
-        _uiState.update { it.copy(movies = getMovies()) }
-
         loadMovies()
-    }
-
-    private fun getMovies(): List<Movie> {
-        return listOf(
-            Movie("The Dark Knight", 9.1F, R.drawable.batman, ""),
-        )
     }
 
     fun loadMovies() {
@@ -45,14 +38,30 @@ class MovieViewModel @Inject constructor(
             _uiState.update { it.copy(isLoading = true, errorMessage = null) }
 
             try {
-//                val newMovies = fetchMoviesFromRepository()
                 val movieDtos = repository.fetchPopularMovies()
                 val newMovies = movieDtos.map { it.toUiModel() }
-                val updatedMovies = _uiState.value.movies + newMovies
-                _uiState.update { it.copy(movies = updatedMovies, isLoading = false) }
+                _uiState.update { it.copy(movies = newMovies, isLoading = false) }
+            } catch (e: HttpException) {
+                val errorMessage = when (e.code()) {
+                    401 -> "API Key ungültig oder abgelaufen"
+                    403 -> "Zugriff verweigert"
+                    404 -> "API Endpoint nicht gefunden"
+                    429 -> "Zu viele Anfragen - bitte später versuchen"
+                    500 -> "Server Fehler"
+                    else -> "HTTP Fehler: ${e.code()}"
+                }
+                _uiState.update { it.copy(
+                    errorMessage = errorMessage,
+                    isLoading = false
+                )}
+            } catch (e: IOException) {
+                _uiState.update { it.copy(
+                    errorMessage = "Netzwerk Fehler - bitte Internetverbindung prüfen",
+                    isLoading = false
+                )}
             } catch (e: Exception) {
                 _uiState.update { it.copy(
-                    errorMessage = e.message ?: "Unbekannter Fehler",
+                    errorMessage = "Unbekannter Fehler: ${e.message}",
                     isLoading = false
                 )}
             }
