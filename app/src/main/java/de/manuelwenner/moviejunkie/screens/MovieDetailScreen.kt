@@ -1,18 +1,26 @@
 package de.manuelwenner.moviejunkie.screens
 
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.draw.blur
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
@@ -40,20 +48,46 @@ fun MovieDetailScreen(innerPadding: PaddingValues, movieTitle: String, viewModel
             .fillMaxSize()
             .padding(innerPadding)
     ) {
-        AsyncImage(
-            //model = "https://image.tmdb.org/t/p/w500${movie.imageUrl}",
-            model = ImageRequest.Builder(LocalContext.current)
-                .data("https://image.tmdb.org/t/p/w500${movie.imageUrl}")
-                .crossfade(true)
-                .build(),
-            contentDescription = movie.title,
-            contentScale = ContentScale.Crop,
+        Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(400.dp),
-            placeholder = painterResource(R.drawable.movie),
-            error = painterResource(R.drawable.movie)
-        )
+                .height(300.dp)
+        ) {
+            // --- Hintergrundbild (unscharf & leicht abgedunkelt) ---
+            AsyncImage(
+                model = ImageRequest.Builder(LocalContext.current)
+                    .data("https://image.tmdb.org/t/p/w500${movie.imageUrl}")
+                    .crossfade(true)
+                    .build(),
+                contentDescription = null,
+                contentScale = ContentScale.Crop,
+                modifier = Modifier
+                    .matchParentSize()
+                    .blur(20.dp)
+                    .alpha(0.6f),
+                placeholder = painterResource(R.drawable.movie),
+                error = painterResource(R.drawable.movie)
+            )
+
+            // Vordergrundbild (Poster vollständig sichtbar)
+            AsyncImage(
+                model = ImageRequest.Builder(LocalContext.current)
+                    .data("https://image.tmdb.org/t/p/w500${movie.imageUrl}")
+                    .crossfade(true)
+                    .build(),
+                contentDescription = movie.title,
+                contentScale = ContentScale.Fit,
+                modifier = Modifier
+                    .align(Alignment.Center)
+                    .fillMaxHeight()
+                    .padding(horizontal = 32.dp)
+                    .clip(RoundedCornerShape(4.dp))
+                    .shadow(8.dp, RoundedCornerShape(4.dp)),
+                placeholder = painterResource(R.drawable.movie),
+                error = painterResource(R.drawable.movie)
+            )
+        }
+
 
         Spacer(modifier = Modifier.height(16.dp))
 

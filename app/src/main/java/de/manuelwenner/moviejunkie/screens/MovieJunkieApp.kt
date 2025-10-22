@@ -11,6 +11,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -22,16 +23,27 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import de.manuelwenner.moviejunkie.R
+import de.manuelwenner.moviejunkie.data.repository.MovieRepository
 import de.manuelwenner.moviejunkie.ui.viewmodels.MovieViewModel
+import de.manuelwenner.moviejunkie.ui.viewmodels.MovieViewModelFactory
 
 /**
  * Composable that displays an app bar and a list of heroes.
  */
 @Composable
 fun MovieJunkieApp(
-    navController: NavHostController = rememberNavController(),
-    viewModel: MovieViewModel = viewModel()
+    navController: NavHostController = rememberNavController()
 ) {
+    /**
+     * Repository und Factory einmal erstellen
+     * Verhindert, dass bei jeder Recomposition eine neue Instanz erstellt wird
+     * Repository bleibt während der gesamten Lebensdauer der Composable erhalten
+     * Wichtig für State-Management und Performance
+     */
+    val repository = remember { MovieRepository() }
+    val factory = remember { MovieViewModelFactory(repository) }
+    val viewModel: MovieViewModel = viewModel(factory = factory)
+
     val backStackEntry by navController.currentBackStackEntryAsState()
 
     var currentRoute = ""

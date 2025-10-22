@@ -14,7 +14,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class MovieViewModel(
-    private val repository: MovieRepository = MovieRepository()
+    private val repository: MovieRepository
 ) : ViewModel() {
 
     // immutable and only mutable inside the ViewModel
