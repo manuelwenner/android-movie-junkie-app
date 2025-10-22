@@ -1,6 +1,5 @@
 package de.manuelwenner.moviejunkie.screens
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
@@ -12,15 +11,18 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.runtime.getValue
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import coil.compose.AsyncImage
+import coil.request.ImageRequest
 import de.manuelwenner.moviejunkie.R
 import de.manuelwenner.moviejunkie.model.Movie
 import de.manuelwenner.moviejunkie.ui.theme.MovieJunkieTheme
@@ -30,7 +32,7 @@ import de.manuelwenner.moviejunkie.ui.viewmodels.MovieViewModel
 fun MovieDetailScreen(innerPadding: PaddingValues, movieTitle: String, viewModel: MovieViewModel) {
     val movieUiState by viewModel.uiState.collectAsState()
     val movie = movieUiState.movies.firstOrNull { it.title == movieTitle } ?: Movie(
-        title = "Unknown", rating = 0F, image = R.drawable.movie
+        title = "Unknown", rating = 0F, image = R.drawable.movie, imageUrl = ""
     )
 
     Column(
@@ -38,11 +40,19 @@ fun MovieDetailScreen(innerPadding: PaddingValues, movieTitle: String, viewModel
             .fillMaxSize()
             .padding(innerPadding)
     ) {
-        Image(
-            painter = painterResource(id = movie.image),
-            contentDescription = null,
-            contentScale = ContentScale.FillWidth,
-            modifier = Modifier.fillMaxWidth().height(200.dp),
+        AsyncImage(
+            //model = "https://image.tmdb.org/t/p/w500${movie.imageUrl}",
+            model = ImageRequest.Builder(LocalContext.current)
+                .data("https://image.tmdb.org/t/p/w500${movie.imageUrl}")
+                .crossfade(true)
+                .build(),
+            contentDescription = movie.title,
+            contentScale = ContentScale.Crop,
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(400.dp),
+            placeholder = painterResource(R.drawable.movie),
+            error = painterResource(R.drawable.movie)
         )
 
         Spacer(modifier = Modifier.height(16.dp))
