@@ -6,6 +6,7 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import de.manuelwenner.moviejunkie.BuildConfig
 import de.manuelwenner.moviejunkie.data.network.AuthInterceptor
 import de.manuelwenner.moviejunkie.data.network.MovieApiService
 import okhttp3.OkHttpClient
@@ -18,8 +19,6 @@ import javax.inject.Singleton
 object NetworkModule {
 
     private const val BASE_URL = "https://api.themoviedb.org/3/"
-    private const val API_KEY =
-        "eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIxMzEyYmQzNjdiYjdlNTQ1ZDdhZTI4M2IwZjg2YjA3NyIsIm5iZiI6MTU2NzUwMDQyOS43MjIsInN1YiI6IjVkNmUyODhkYjZjMjY0MDAwZjMzNzAzZCIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.XiqbLsjgNf-8WYRHn3hY1YmChg_M7HEVjd0dWqzp5Z8"
 
     @Provides
     @Singleton
@@ -33,7 +32,7 @@ object NetworkModule {
     @Singleton
     fun provideOkHttpClient(): OkHttpClient {
         return OkHttpClient.Builder()
-            .addInterceptor(AuthInterceptor(API_KEY))
+            .addInterceptor(AuthInterceptor(BuildConfig.TMDB_API_KEY))
             .build()
     }
 
