@@ -15,7 +15,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -33,7 +32,6 @@ import de.manuelwenner.moviejunkie.R
 import de.manuelwenner.moviejunkie.model.Movie
 import de.manuelwenner.moviejunkie.ui.components.MovieItem
 import de.manuelwenner.moviejunkie.ui.viewmodels.MovieViewModel
-import kotlinx.coroutines.delay
 
 @Composable
 fun HomeScreen(
@@ -42,11 +40,6 @@ fun HomeScreen(
     viewModel: MovieViewModel
 ) {
     val movieUiState by viewModel.uiState.collectAsState()
-
-    LaunchedEffect(Unit) {
-        delay(3000)
-        viewModel.loadMovies()
-    }
 
     Column(modifier = Modifier.padding(innerPadding)) {
         val images = listOf(

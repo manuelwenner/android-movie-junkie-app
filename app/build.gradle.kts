@@ -61,4 +61,7 @@ dependencies {
     implementation(libs.retrofit)
     implementation(libs.retrofit.converter.scalars)
     implementation(libs.retrofit.converter.moshi)
+    implementation(libs.moshi)
+    implementation(libs.moshi.kotlin)
+    implementation(libs.coil.compose)
 }

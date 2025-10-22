@@ -1,17 +1,18 @@
 package de.manuelwenner.moviejunkie.data.repository
 
+import de.manuelwenner.moviejunkie.data.network.MovieDto
 import de.manuelwenner.moviejunkie.data.network.RetrofitInstance
 
 
 class MovieRepository {
-    suspend fun fetchPopularMovies(): String {
+    suspend fun fetchPopularMovies(): List<MovieDto> {
         return try {
             val response =
                 RetrofitInstance.api.getDiscoverMovie()
-            response
+            response.results
         } catch (e: Exception) {
             e.printStackTrace()
-           ""
+            emptyList()
         }
     }
 }

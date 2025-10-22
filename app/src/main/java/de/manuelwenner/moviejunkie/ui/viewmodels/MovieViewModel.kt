@@ -3,6 +3,7 @@ package de.manuelwenner.moviejunkie.ui.viewmodels
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import de.manuelwenner.moviejunkie.R
+import de.manuelwenner.moviejunkie.data.network.toUiModel
 import de.manuelwenner.moviejunkie.data.repository.MovieRepository
 import de.manuelwenner.moviejunkie.model.Movie
 import de.manuelwenner.moviejunkie.ui.MoviesUiState
@@ -25,16 +26,13 @@ class MovieViewModel(
     init {
         // Synchron, kein Launch nötig da getMovies() nicht suspendierend ist
         _uiState.update { it.copy(movies = getMovies()) }
+
+        loadMovies()
     }
 
     private fun getMovies(): List<Movie> {
         return listOf(
-            Movie("The Dark Knight", 9.1F, R.drawable.batman),
-            Movie("Inception", 8.8F),
-            Movie("The Godfather", 9.5F),
-            Movie("Interstellar", 8.2F),
-            Movie("Pulp Fiction", 7.9F),
-            Movie("The Shawshank Redemption", 6.2F),
+            Movie("The Dark Knight", 9.1F, R.drawable.batman, ""),
         )
     }
 
@@ -45,9 +43,10 @@ class MovieViewModel(
 
             try {
 //                val newMovies = fetchMoviesFromRepository()
-                val result = repository.fetchPopularMovies()
-                val updatedMovies = _uiState.value.movies
-                _uiState.update { it.copy(movies = updatedMovies, isLoading = false, errorMessage = result) }
+                val movieDtos = repository.fetchPopularMovies()
+                val newMovies = movieDtos.map { it.toUiModel() }
+                val updatedMovies = _uiState.value.movies + newMovies
+                _uiState.update { it.copy(movies = updatedMovies, isLoading = false) }
             } catch (e: Exception) {
                 _uiState.update { it.copy(
                     errorMessage = e.message ?: "Unbekannter Fehler",
