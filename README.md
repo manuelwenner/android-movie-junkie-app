@@ -79,7 +79,7 @@ Die App folgt dem **MVVM (Model-View-ViewModel)** Pattern und implementiert **Cl
 ```
 app/src/main/java/de/manuelwenner/moviejunkie/
 ├── di/                          # Dependency Injection
-│   ├── AppModule.kt            # Repository Bindings
+│   ├── RepositoryModule.kt     # Repository Bindings
 │   └── NetworkModule.kt        # Network Dependencies
 ├── data/                       # Data Layer
 │   ├── network/               # API & Network
@@ -97,7 +97,9 @@ app/src/main/java/de/manuelwenner/moviejunkie/
 │   └── MovieDetailScreen.kt  # Film-Details Screen
 ├── ui/                       # UI Components
 │   ├── components/           # Reusable Components
+│   ├── constants/           # UI Constants & Design System
 │   ├── theme/               # App Theme
+│   ├── utils/               # UI Utilities (ImageUtils)
 │   └── viewmodels/          # ViewModels
 │       └── MovieViewModel.kt # Main ViewModel
 ├── MainActivity.kt           # App Entry Point
@@ -287,6 +289,51 @@ Die App enthält grundlegende Test-Strukturen:
 ./gradlew test          # Unit Tests
 ./gradlew connectedAndroidTest  # UI Tests
 ```
+
+## 🧪 Testing
+
+Die App enthält grundlegende Test-Strukturen:
+- **Unit Tests**: ViewModel und Repository Tests
+- **UI Tests**: Compose UI Tests
+- **Integration Tests**: End-to-End Tests
+
+### Test ausführen
+```bash
+./gradlew test          # Unit Tests
+./gradlew connectedAndroidTest  # UI Tests
+```
+
+## 🚀 Future Roadmap
+
+### Phase 2: Offline-First Architektur
+- **Room Database**: Lokale Datenspeicherung für Offline-Nutzung
+- **Use Cases**: Geschäftslogik für Datenquellen-Abstraktion (API + Local DB)
+- **Caching Strategy**: Intelligente Datenverwaltung zwischen API und lokaler DB
+- **Sync Mechanism**: Automatische Synchronisation bei Netzwerkverfügbarkeit
+
+### Phase 3: Erweiterte Features
+- **Movie Search**: Suchfunktionalität mit Filteroptionen
+- **Favorites**: Favoriten-System mit lokaler Speicherung
+- **User Preferences**: Benutzereinstellungen und Personalisierung
+- **Movie Details**: Erweiterte Filminformationen (Cast, Crew, Reviews)
+
+### Phase 4: Performance & UX
+- **Pagination**: Lazy Loading für große Filmlisten
+- **Image Optimization**: Adaptive Bildgrößen basierend auf Bildschirmgröße
+- **Dark Mode**: Vollständige Theme-Unterstützung
+- **Accessibility**: Erweiterte Barrierefreiheit-Features
+
+### Phase 5: Advanced Architecture
+- **Modularization**: Feature-basierte Modulstruktur
+- **Compose Navigation**: Type-safe Navigation mit Arguments
+- **Testing**: Umfassende Test-Coverage (Unit, Integration, UI)
+- **CI/CD**: Automatisierte Build- und Deployment-Pipeline
+
+### Technische Verbesserungen
+- **ProGuard Rules**: Code-Obfuskation für Release-Builds
+- **Network Security**: Erweiterte Sicherheitskonfiguration
+- **Performance Monitoring**: Crash-Reporting und Analytics
+- **Code Quality**: Linting, Formatting und Code-Analyse
 
 ## 📱 Screenshots
 
