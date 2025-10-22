@@ -20,18 +20,19 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import de.manuelwenner.moviejunkie.model.Movie
+import de.manuelwenner.moviejunkie.ui.constants.UiConstants
 
 @Composable
 fun MovieItem(movie: Movie, onListItemClicked: () -> Unit) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(8.dp)
+            .padding(UiConstants.Spacing.SM)
             .background(
                 color = MaterialTheme.colorScheme.surfaceVariant,
-                shape = RoundedCornerShape(12.dp)
+                shape = RoundedCornerShape(UiConstants.CornerRadius.LG)
             )
-            .padding(12.dp)
+            .padding(UiConstants.Spacing.MD)
             .clickable {
                 onListItemClicked()
             },
@@ -41,14 +42,14 @@ fun MovieItem(movie: Movie, onListItemClicked: () -> Unit) {
         Text(
             text = "\uD83C\uDFAC ${movie.title}",
             color = MaterialTheme.colorScheme.onSurface,
-            fontSize = 18.sp,
+            fontSize = UiConstants.Typography.BODY_LARGE,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,
             modifier = Modifier.weight(1f)
         )
 
         Row(
-            modifier = Modifier.padding(start = 8.dp),
+            modifier = Modifier.padding(start = UiConstants.Spacing.SM),
             verticalAlignment = Alignment.CenterVertically
         ) {
             repeat(movie.rating.toInt()) {
@@ -56,12 +57,12 @@ fun MovieItem(movie: Movie, onListItemClicked: () -> Unit) {
                     imageVector = Icons.Default.Star,
                     contentDescription = null,
                     tint = Color.Yellow,
-                    modifier = Modifier.size(16.dp)
+                    modifier = Modifier.size(UiConstants.Size.ICON_SM)
                 )
             }
             Text(
                 text = " (${movie.rating}/10)",
-                fontSize = 16.sp,
+                fontSize = UiConstants.Typography.BODY_MEDIUM,
                 color = MaterialTheme.colorScheme.onSurface
             )
         }

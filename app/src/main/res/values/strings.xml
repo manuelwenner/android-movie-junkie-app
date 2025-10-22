@@ -23,4 +23,5 @@
     
     <!-- Preview -->
     <string name="preview_movie_title">Guardians of the galaxy</string>
+    <string name="default_user_name">Manuel</string>
 </resources>

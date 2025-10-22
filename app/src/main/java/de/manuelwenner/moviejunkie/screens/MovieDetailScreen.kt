@@ -25,6 +25,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -33,6 +34,7 @@ import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import de.manuelwenner.moviejunkie.R
 import de.manuelwenner.moviejunkie.model.Movie
+import de.manuelwenner.moviejunkie.ui.constants.UiConstants
 import de.manuelwenner.moviejunkie.ui.theme.MovieJunkieTheme
 import de.manuelwenner.moviejunkie.ui.viewmodels.MovieViewModel
 
@@ -40,7 +42,7 @@ import de.manuelwenner.moviejunkie.ui.viewmodels.MovieViewModel
 fun MovieDetailScreen(innerPadding: PaddingValues, movieTitle: String, viewModel: MovieViewModel) {
     val movieUiState by viewModel.uiState.collectAsState()
     val movie = movieUiState.movies.firstOrNull { it.title == movieTitle } ?: Movie(
-        title = "Unknown", rating = 0F, image = R.drawable.movie, imageUrl = ""
+        title = stringResource(R.string.unknown_movie), rating = 0F, image = R.drawable.movie, imageUrl = ""
     )
 
     Column(
@@ -51,7 +53,7 @@ fun MovieDetailScreen(innerPadding: PaddingValues, movieTitle: String, viewModel
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(300.dp)
+                .height(UiConstants.Size.DETAIL_IMAGE_HEIGHT)
         ) {
             // --- Hintergrundbild (unscharf & leicht abgedunkelt) ---
             AsyncImage(
@@ -63,8 +65,8 @@ fun MovieDetailScreen(innerPadding: PaddingValues, movieTitle: String, viewModel
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
                     .matchParentSize()
-                    .blur(20.dp)
-                    .alpha(0.6f),
+                    .blur(UiConstants.Blur.LG)
+                    .alpha(UiConstants.Alpha.BACKGROUND),
                 placeholder = painterResource(R.drawable.movie),
                 error = painterResource(R.drawable.movie)
             )
@@ -80,30 +82,30 @@ fun MovieDetailScreen(innerPadding: PaddingValues, movieTitle: String, viewModel
                 modifier = Modifier
                     .align(Alignment.Center)
                     .fillMaxHeight()
-                    .padding(horizontal = 32.dp)
-                    .clip(RoundedCornerShape(4.dp))
-                    .shadow(8.dp, RoundedCornerShape(4.dp)),
+                    .padding(horizontal = UiConstants.Spacing.XXXL)
+                    .clip(RoundedCornerShape(UiConstants.CornerRadius.SM))
+                    .shadow(UiConstants.Shadow.MD, RoundedCornerShape(UiConstants.CornerRadius.SM)),
                 placeholder = painterResource(R.drawable.movie),
                 error = painterResource(R.drawable.movie)
             )
         }
 
 
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(UiConstants.Spacing.LG))
 
         Column(
-            modifier = Modifier.padding(16.dp)
+            modifier = Modifier.padding(UiConstants.Spacing.LG)
         ) {
             Text(
                 text = movie.title,
-                fontSize = 32.sp,
+                fontSize = UiConstants.Typography.HEADLINE_LARGE,
                 color = Color.White,
-                modifier = Modifier.padding(bottom = 8.dp)
+                modifier = Modifier.padding(bottom = UiConstants.Spacing.SM)
             )
 
             Text(
-                text = "Rating: ${movie.rating}/10",
-                fontSize = 18.sp,
+                text = stringResource(R.string.rating_format, movie.rating),
+                fontSize = UiConstants.Typography.BODY_LARGE,
                 color = Color.Gray,
             )
         }
@@ -115,7 +117,7 @@ fun MovieDetailScreen(innerPadding: PaddingValues, movieTitle: String, viewModel
 @Preview
 fun MovieDetailPreview() {
     MovieJunkieTheme {
-        val movieTitle = "Guardians of the galaxy"
+        val movieTitle = stringResource(R.string.preview_movie_title)
         val viewModel: MovieViewModel = viewModel()
 
         Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->

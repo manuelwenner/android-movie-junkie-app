@@ -31,6 +31,7 @@ import androidx.compose.ui.unit.sp
 import de.manuelwenner.moviejunkie.R
 import de.manuelwenner.moviejunkie.model.Movie
 import de.manuelwenner.moviejunkie.ui.components.MovieItem
+import de.manuelwenner.moviejunkie.ui.constants.UiConstants
 import de.manuelwenner.moviejunkie.ui.viewmodels.MovieViewModel
 
 @Composable
@@ -63,7 +64,7 @@ fun HomeScreen(
                 verticalArrangement = Arrangement.Top
             ) {
                 HomeSection(
-                    modifier = Modifier.padding(8.dp),
+                    modifier = Modifier.padding(UiConstants.Spacing.SM),
                     onClick = { currentImage = images.random() }
                 )
 
@@ -83,14 +84,14 @@ fun HomeSection(
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = modifier
-            .padding(8.dp)
+            .padding(UiConstants.Spacing.SM)
             .fillMaxWidth()
     ) {
         Headline()
-        Welcome("Manuel")
+        Welcome(stringResource(R.string.default_user_name))
         Button(
             onClick = onClick,
-            modifier = Modifier.padding(8.dp)
+            modifier = Modifier.padding(UiConstants.Spacing.SM)
         ) {
             Text(stringResource(R.string.change_image_button))
         }
@@ -107,7 +108,7 @@ fun MovieList(
     Column(
         modifier = modifier
             .fillMaxSize()
-            .padding(16.dp)
+            .padding(UiConstants.Spacing.LG)
     ) {
         LazyColumn(
             modifier = Modifier.fillMaxSize()
@@ -126,13 +127,13 @@ fun Headline() {
         modifier = Modifier
             .background(
                 color = Color.Black.copy(alpha = 0.6f),
-                shape = RoundedCornerShape(8.dp)
+                shape = RoundedCornerShape(UiConstants.CornerRadius.MD)
             )
-            .padding(horizontal = 16.dp, vertical = 8.dp)
+            .padding(horizontal = UiConstants.Spacing.LG, vertical = UiConstants.Spacing.SM)
     ) {
         Text(
             text = stringResource(R.string.headline),
-            fontSize = 32.sp,
+            fontSize = UiConstants.Typography.HEADLINE_LARGE,
             color = Color.White
         )
     }
